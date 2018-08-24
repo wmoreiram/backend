@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import rasterio
 import rasterio.features
 import rasterio.warp
 
-with rasterio.open('true_color.tif') as dataset:
+with rasterio.open('static/true_color_4326.tif') as dataset:
 
     # Read the dataset's valid data mask as a ndarray.
     mask = dataset.dataset_mask()
@@ -15,8 +13,7 @@ with rasterio.open('true_color.tif') as dataset:
 
         # Transform shapes from the dataset's own coordinate
         # reference system to CRS84 (EPSG:4326).
-        geom = rasterio.warp.transform_geom(
-            dataset.crs, 'EPSG:4326', geom, precision=6)
+        #geom = rasterio.warp.transform_geom(dataset.crs, 'EPSG:4326', geom, precision=6)
 
-        # Print GeoJSON shapes to stdout.
+        # Print GeoJSON shapes to stdout.  
         print(geom)
