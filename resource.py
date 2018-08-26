@@ -2,19 +2,18 @@ from flask import Flask, request, url_for
 from flask_cors import CORS
 import json
 import rasterio
+import numpy as np
+import matplotlib.mlab as mlab
+import matplotlib.pyplot as plt
+import base64
+from io import BytesIO
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route("/")
-def hello():
-    return "Hello World!"
-
-@app.route("/a")
-def a():
-    param = request.args.get("param")
-    print(param)
-    return param
+def strider():
+    return "Strider"
 
 @app.route("/inf")
 def inf():
@@ -35,11 +34,18 @@ def ndvi():
     x = float(coord[0])
     y = float(coord[1])
     row, col = dataset.index(x,y)
+    meta = {}
     if (row > 0 and row <= height) and (col > 0 and col <= width) :
-        ret = str(band[row, col])
+        ndvi = str(band[row, col])
+        meta["success"] = True
+        meta["ndvi"] = ndvi
     else :
-        ret = ''
-    print(ret)
-    return ret
+        meta["success"] = False
+    return json.dumps(meta), 200, {"Content-Type": "application/json"}
+
+@app.route("/histograma")
+def histograma():
+    param = request.args.get("param")    
+    return param
 
 app.run(debug=True, use_reloader=True)
